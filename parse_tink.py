@@ -1,10 +1,44 @@
 import re
 import ast
+# import tink_model
 from datetime import datetime
 
 
-def get_section_name():
-    pass
+class Transaction():
+
+    def __init__(self, transaction_section):
+
+        self.id = get_section_id('Transaction (\d*,*\d+)', transaction_section)
+        self.repayments = dict()
+
+        # Check if there's any repayments connected to this transaction
+        re_lvl_hash = '^(#+) .+$'
+        hash_lvls = re.findall(re_lvl_hash, transaction_section, re.M)
+
+        if len(hash_lvls) > 1:
+
+            # Split repayments
+            repay_sections = split_sections('####', transaction_section)
+
+            r = dict()
+            for _, repay_str in repay_sections.items():
+                # Parse fields
+                key = get_section_id('- Part (\d*,*\d+)', repay_str)
+                r[key] = parse_fields(repay_str)
+
+                # Get rid of repayments from original expense
+                transaction_section = transaction_section.replace(repay_str, '')
+
+            self.repayments = r
+            self.fields = parse_fields(transaction_section)
+
+        else:
+            self.fields = parse_fields(transaction_section)
+
+
+def get_section_id(re_id, section):
+    m = re.findall(re_id, section)
+    return int(m[0].replace(',', ''))
 
 
 def split_sections(delimiter, data):
@@ -52,8 +86,8 @@ def parse_fields(section):
     re_lvl_hash = '^(#+) .+$'
     hash_lvls = re.findall(re_lvl_hash, section, re.M)
 
-
     if len(hash_lvls) == 1:
+        # Ex '    Amount:      123.0'
         re_fields = '^\s+(.+):\s+?(.*?)$'
         match = re.findall(re_fields, section, re.M)
 
@@ -71,19 +105,14 @@ def parse_fields(section):
     return d
 
 
-def parse_transactions(transactions):
+def parse_transactions(sections):
 
-    d = dict()
-    for key, transaction in transactions.items():
-        field_dict = parse_fields(transaction)
+    transactions = dict()
+    for _, section in sections.items():
+        t = Transaction(section)
+        transactions[t.id] = t
 
-        if key not in d:
-            d[key] = field_dict
-        else:
-            print('ERROR: Key already exist1')
-            break
-
-    return d
+    return transactions
 
 
 with open('tink-export-2020-04-10.txt', 'r') as f:
@@ -96,7 +125,7 @@ with open('tink-export-2020-04-10.txt', 'r') as f:
     transactions = parse_transactions(transaction_section)
 
     for i, (k, v) in enumerate(transactions.items()):
-        print(k, v['Date'], type(v['Date']), i)
+        print(k, v.fields, i)
 
         if i >= 1:
             break
