@@ -4,6 +4,25 @@ import ast
 from datetime import datetime
 
 
+class Reimbursement():
+
+    def __init__(self, reimbursement_section):
+        self.id = get_section_id('- Part (\d*,*\d+)', reimbursement_section)
+
+        self.all_fields = parse_fields(reimbursement_section)
+        self.map_fields()
+
+
+    def map_fields(self):
+        f = self.all_fields
+
+        self.date = f['Date']
+        self.amount = f['Amount']
+        self.category = f['Category']
+        self.counterpart_description = f['Counterpart Description']
+        self.counterpart_amount = f['Counterpart Amount']
+
+
 class Transaction():
 
     def __init__(self, transaction_section):
@@ -17,23 +36,36 @@ class Transaction():
 
         if len(hash_lvls) > 1:
 
-            # Split repayments
-            repay_sections = split_sections('####', transaction_section)
+            # Split reimbursements
+            rb_sections = split_sections('####', transaction_section)
 
             r = dict()
-            for _, repay_str in repay_sections.items():
-                # Parse fields
-                key = get_section_id('- Part (\d*,*\d+)', repay_str)
-                r[key] = parse_fields(repay_str)
+            for _, repay_str in rb_sections.items():
+                rb = Reimbursement(repay_str)
+                r[rb.id] = rb
 
-                # Get rid of repayments from original expense
+                # Get rid of reimbursements from transaction section
                 transaction_section = transaction_section.replace(repay_str, '')
 
-            self.repayments = r
-            self.fields = parse_fields(transaction_section)
+            self.reimbursements = r
 
-        else:
-            self.fields = parse_fields(transaction_section)
+        self.all_fields = parse_fields(transaction_section)
+        self.map_fields()
+
+    def map_fields(self):
+        f = self.all_fields
+
+        self.date = f['Date']
+        self.description = f['Description']
+        self.original_description = f['Original Description']
+        self.amount = f['Amount']
+        self.type = f['Type']
+
+        # Optional field
+        try:
+            self.modified_category = f['Modified category']
+        except:
+            self.modified_category = None
 
 
 def get_section_id(re_id, section):
@@ -105,7 +137,7 @@ def parse_fields(section):
     return d
 
 
-def parse_transactions(sections):
+def get_transactions(sections):
 
     transactions = dict()
     for _, section in sections.items():
@@ -121,13 +153,10 @@ with open('tink-export-2020-04-10.txt', 'r') as f:
     s = split_sections('##', d)
 
     transaction_section = split_sections('###', s['Transactions:'])
-    # print(transaction_section['Transaction 1'])
-    transactions = parse_transactions(transaction_section)
+    transactions = get_transactions(transaction_section)
 
-    for i, (k, v) in enumerate(transactions.items()):
-        print(k, v.fields, i)
+    for k, v in transactions.items():
+        print(k, v.description)
 
-        if i >= 1:
+        if k >= 10:
             break
-
-    print('herde')
