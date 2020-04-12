@@ -1,6 +1,7 @@
 import re
 import ast
-# import tink_model
+import csv
+
 from datetime import datetime
 
 
@@ -75,7 +76,10 @@ class Transaction():
         return sum
 
     def serialize(self):
-        return [self.date, self.description, self.balance, self.type, self.modified_category]
+        return [self.id, self.date, self.description, self.balance, self.type, self.modified_category]
+
+    def serialize_header(self):
+        return ['ID', 'Date', 'Description', 'Balance', 'Type', 'Modified Category']
 
 
 def get_section_id(re_id, section):
@@ -157,6 +161,12 @@ def get_transactions(sections):
     return transactions
 
 
+def write_csv(filename, csv_list):
+    with open(filename, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerows(csv_list)
+
+
 with open('tink-export-2020-04-10.txt', 'r') as f:
     d = f.read()
 
@@ -165,22 +175,17 @@ with open('tink-export-2020-04-10.txt', 'r') as f:
     transaction_section = split_sections('###', s['Transactions:'])
     transactions = get_transactions(transaction_section)
 
+    def _exclude(trans):
+        if 'Default' in trans.type:
+            if (trans.modified_category and 'Exkludera' not in trans.modified_category):
+                if abs(trans.balance) > 1.0:
+                    return False
+        return True
 
-
-    for k, t in transactions.items():
-
-        def _exclude(trans):
-            if 'Transfer' not in trans.type:
-                if (trans.modified_category and 'Exkludera' not in trans.modified_category):
-                    if abs(trans.balance) > 1.0:
-                        return False
-            return True
-
+    # Prepare CSV output
+    l = [next(iter(transactions.values())).serialize_header()]
+    for t in transactions.values():
         if not _exclude(t):
-            print(k, t.type, t.serialize())
+            l.append(t.serialize())
 
-        if k >= 100:
-            break
-
-    # print(transactions[1998].serialize())
-    # print(transactions[1968].serialize())
+    write_csv('transactions.csv', l)
