@@ -10,10 +10,10 @@ class Reimbursement():
         self.id = get_section_id('- Part (\d*,*\d+)', reimbursement_section)
 
         self.all_fields = parse_fields(reimbursement_section)
-        self.map_fields()
+        self._map_fields()
 
 
-    def map_fields(self):
+    def _map_fields(self):
         f = self.all_fields
 
         self.date = f['Date']
@@ -28,7 +28,7 @@ class Transaction():
     def __init__(self, transaction_section):
 
         self.id = get_section_id('Transaction (\d*,*\d+)', transaction_section)
-        self.repayments = dict()
+        self.reimbursements = dict()
 
         # Check if there's any repayments connected to this transaction
         re_lvl_hash = '^(#+) .+$'
@@ -50,15 +50,16 @@ class Transaction():
             self.reimbursements = r
 
         self.all_fields = parse_fields(transaction_section)
-        self.map_fields()
+        self._map_fields()
 
-    def map_fields(self):
+    def _map_fields(self):
         f = self.all_fields
 
         self.date = f['Date']
         self.description = f['Description']
         self.original_description = f['Original Description']
         self.amount = f['Amount']
+        self.balance = self.amount - self.sum_reimbursements()
         self.type = f['Type']
 
         # Optional field
@@ -66,6 +67,15 @@ class Transaction():
             self.modified_category = f['Modified category']
         except:
             self.modified_category = None
+
+    def sum_reimbursements(self):
+        sum = 0
+        for _, r in self.reimbursements.items():
+            sum += r.amount
+        return sum
+
+    def serialize(self):
+        return [self.date, self.description, self.balance, self.type, self.modified_category]
 
 
 def get_section_id(re_id, section):
@@ -155,8 +165,22 @@ with open('tink-export-2020-04-10.txt', 'r') as f:
     transaction_section = split_sections('###', s['Transactions:'])
     transactions = get_transactions(transaction_section)
 
-    for k, v in transactions.items():
-        print(k, v.description)
 
-        if k >= 10:
+
+    for k, t in transactions.items():
+
+        def _exclude(trans):
+            if 'Transfer' not in trans.type:
+                if (trans.modified_category and 'Exkludera' not in trans.modified_category):
+                    if abs(trans.balance) > 1.0:
+                        return False
+            return True
+
+        if not _exclude(t):
+            print(k, t.type, t.serialize())
+
+        if k >= 100:
             break
+
+    # print(transactions[1998].serialize())
+    # print(transactions[1968].serialize())
