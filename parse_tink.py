@@ -76,7 +76,7 @@ class Transaction():
         return sum
 
     def serialize(self):
-        return [self.id, self.date, self.description, self.balance, self.type, self.modified_category]
+        return [self.id, self.date, self.description, self.balance, self.type, nonetype_to_str(self.modified_category)]
 
     def serialize_header(self):
         return ['ID', 'Date', 'Description', 'Balance', 'Type', 'Modified Category']
@@ -86,6 +86,11 @@ def get_section_id(re_id, section):
     m = re.findall(re_id, section)
     return int(m[0].replace(',', ''))
 
+
+def nonetype_to_str(n):
+    if n is None:
+        return 'None'
+    return n
 
 def split_sections(delimiter, data):
 
@@ -128,19 +133,19 @@ def parse_datatype(key, value):
 
 def parse_fields(section):
 
-        # Ex '    Amount:      123.0'
-        re_fields = '^\s+(.+):\s+?(.*?)$'
-        match = re.findall(re_fields, section, re.M)
+    # Ex '    Amount:      123.0'
+    re_fields = '^\s+(.+):\s+?(.*?)$'
+    match = re.findall(re_fields, section, re.M)
 
     d = dict()
-        for m in match:
-            key, value = m
+    for m in match:
+        key, value = m
 
-            if key not in d:
-                d[key] = parse_datatype(key, value.strip())
-            else:
-                print('ERROR: Key already exist2')
-                break
+        if key not in d:
+            d[key] = parse_datatype(key, value.strip())
+        else:
+            print('ERROR: Key already exist2')
+            break
 
     return d
 
@@ -162,17 +167,19 @@ def write_csv(filename, csv_list):
 
 
 with open('tink-export-2020-04-10.txt', 'r') as f:
-    d = f.read()
+    fcontent = f.read()
 
-    s = split_sections('##', d)
-
-    transaction_section = split_sections('###', s['Transactions:'])
-    transactions = get_transactions(transaction_section)
+    section_top = split_sections('##', fcontent)
+    section_trans = split_sections('###', section_top['Transactions:'])
+    transactions = get_transactions(section_trans)
 
     def _exclude(trans):
-        if 'Default' in trans.type:
-            if (trans.modified_category and 'Exkludera' not in trans.modified_category):
-                if abs(trans.balance) > 1.0:
+        if abs(trans.balance) > 1.0:
+            if 'Transfer' not in trans.type:
+                if trans.modified_category:
+                    if 'Exkludera' not in trans.modified_category:
+                        return False
+                else:
                     return False
         return True
 
