@@ -183,10 +183,14 @@ with open('tink-export-2020-04-10.txt', 'r') as f:
                     return False
         return True
 
+    l = list()
     # Prepare CSV output
-    l = [transactions[0].serialize_header()]
     for t in transactions:
         if not _exclude(t):
             l.append(t.serialize())
+
+    # Sort by date and add header
+    l.sort(key=lambda x: x[1])
+    l.insert(0, transactions[0].serialize_header())
 
     write_csv('transactions.csv', l)
