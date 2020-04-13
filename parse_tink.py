@@ -127,16 +127,12 @@ def parse_datatype(key, value):
 
 
 def parse_fields(section):
-    d = dict()
 
-    re_lvl_hash = '^(#+) .+$'
-    hash_lvls = re.findall(re_lvl_hash, section, re.M)
-
-    if len(hash_lvls) == 1:
         # Ex '    Amount:      123.0'
         re_fields = '^\s+(.+):\s+?(.*?)$'
         match = re.findall(re_fields, section, re.M)
 
+    d = dict()
         for m in match:
             key, value = m
 
@@ -145,8 +141,6 @@ def parse_fields(section):
             else:
                 print('ERROR: Key already exist2')
                 break
-    else:
-        print('WARNING: Repayments not yet supported')
 
     return d
 
