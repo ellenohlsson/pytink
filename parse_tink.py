@@ -92,6 +92,7 @@ def nonetype_to_str(n):
         return 'None'
     return n
 
+
 def split_sections(delimiter, data):
 
     # Data example to match single_section
@@ -132,8 +133,9 @@ def parse_datatype(key, value):
 
 
 def parse_fields(section):
-
-    # Ex '    Amount:      123.0'
+    # Example:
+    # '    Amount:      123.0'
+    # '    Description: asdf'
     re_fields = '^\s+(.+):\s+?(.*?)$'
     match = re.findall(re_fields, section, re.M)
 
@@ -151,11 +153,9 @@ def parse_fields(section):
 
 
 def get_transactions(sections):
-
-    transactions = dict()
+    transactions = list()
     for _, section in sections.items():
-        t = Transaction(section)
-        transactions[t.id] = t
+        transactions.append(Transaction(section))
 
     return transactions
 
@@ -184,8 +184,8 @@ with open('tink-export-2020-04-10.txt', 'r') as f:
         return True
 
     # Prepare CSV output
-    l = [next(iter(transactions.values())).serialize_header()]
-    for t in transactions.values():
+    l = [transactions[0].serialize_header()]
+    for t in transactions:
         if not _exclude(t):
             l.append(t.serialize())
 
