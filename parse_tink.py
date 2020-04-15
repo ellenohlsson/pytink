@@ -166,11 +166,13 @@ def write_csv(filename, csv_list):
         writer.writerows(csv_list)
 
 
-with open('tink-export-2020-04-10.txt', 'r') as f:
+def parse_export(filename, section_title, csv_filename):
+
+    with open(filename, 'r') as f:
     fcontent = f.read()
 
     section_top = split_sections('##', fcontent)
-    section_trans = split_sections('###', section_top['Transactions:'])
+        section_trans = split_sections('###', section_top[section_title])
     transactions = get_transactions(section_trans)
 
     def _exclude(trans):
@@ -193,4 +195,8 @@ with open('tink-export-2020-04-10.txt', 'r') as f:
     l.sort(key=lambda x: x[1])
     l.insert(0, transactions[0].serialize_header())
 
-    write_csv('transactions.csv', l)
+        write_csv(csv_filename, l)
+
+
+if __name__ == '__main__':
+    parse_export('tink-export-2020-04-10.txt', 'Transactions:', 'transactions.csv')
