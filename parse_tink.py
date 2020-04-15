@@ -1,6 +1,7 @@
 import re
 import ast
 import csv
+import argparse
 
 from datetime import datetime
 
@@ -93,12 +94,11 @@ def nonetype_to_str(n):
     return n
 
 
+# Data example to match single_section
+# ## Section 1 (^## \w+)
+# WHATEVER (.*?)
+# ## Section 2 OR end of sections (?=^## |\Z)
 def split_sections(delimiter, data):
-
-    # Data example to match single_section
-    # ## Section 1 (^## \w+)
-    # WHATEVER (.*?)
-    # ## Section 2 OR end of sections (?=^## |\Z)
     single_sections = '^{} \w+.*?(?=^{} |\Z)'.format(delimiter, delimiter)
     sections = re.findall(single_sections, data, re.S | re.M)
 
@@ -117,7 +117,6 @@ def split_sections(delimiter, data):
 
 
 def parse_datatype(key, value):
-
     if value:
         if 'Date' in key or 'Updated' in key:
             return datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ')
@@ -133,9 +132,10 @@ def parse_datatype(key, value):
 
 
 def parse_fields(section):
-    # Example:
-    # '    Amount:      123.0'
-    # '    Description: asdf'
+# Example:
+# '    Amount:      123.0'
+# '    Description: asdf'
+def parse_fields(section):
     re_fields = '^\s+(.+):\s+?(.*?)$'
     match = re.findall(re_fields, section, re.M)
 
@@ -169,31 +169,31 @@ def write_csv(filename, csv_list):
 def parse_export(filename, section_title, csv_filename):
 
     with open(filename, 'r') as f:
-    fcontent = f.read()
+        fcontent = f.read()
 
-    section_top = split_sections('##', fcontent)
+        section_top = split_sections('##', fcontent)
         section_trans = split_sections('###', section_top[section_title])
-    transactions = get_transactions(section_trans)
+        transactions = get_transactions(section_trans)
 
-    def _exclude(trans):
-        if abs(trans.balance) > 1.0:
-            if 'Transfer' not in trans.type:
-                if trans.modified_category:
-                    if 'Exkludera' not in trans.modified_category:
+        def _exclude(trans):
+            if abs(trans.balance) > 1.0:
+                if 'Transfer' not in trans.type:
+                    if trans.modified_category:
+                        if 'Exkludera' not in trans.modified_category:
+                            return False
+                    else:
                         return False
-                else:
-                    return False
-        return True
+            return True
 
-    l = list()
-    # Prepare CSV output
-    for t in transactions:
-        if not _exclude(t):
-            l.append(t.serialize())
+        l = list()
+        # Prepare CSV output
+        for t in transactions:
+            if not _exclude(t):
+                l.append(t.serialize())
 
-    # Sort by date and add header
-    l.sort(key=lambda x: x[1])
-    l.insert(0, transactions[0].serialize_header())
+        # Sort by date and add header
+        l.sort(key=lambda x: x[1])
+        l.insert(0, transactions[0].serialize_header())
 
         write_csv(csv_filename, l)
 
