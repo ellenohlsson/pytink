@@ -199,4 +199,12 @@ def parse_export(filename, section_title, csv_filename):
 
 
 if __name__ == '__main__':
-    parse_export('tink-export-2020-04-10.txt', 'Transactions:', 'transactions.csv')
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("tink_filename", help="Filename to tink export") # Ex: tink-export-2020-04-10.txt
+    parser.add_argument("section_to_parse", help="Section to parse") # Ex: Transactions
+    parser.add_argument("csv_filename", help="Filename of csv export") # Ex: filename of csv to be exported
+    args = parser.parse_args()
+
+    if 'Transactions' in args.section_to_parse:
+        parse_export(args.tink_filename, 'Transactions:', args.csv_filename)
