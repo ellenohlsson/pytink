@@ -1,13 +1,13 @@
 import re
 
-import parse as p
+import parse
 
 class Reimbursement():
 
     def __init__(self, reimbursement_section):
-        self.id = p.get_section_id(r'- Part (\d*,*\d+)', reimbursement_section)
+        self.id = parse.get_section_id(r'- Part (\d*,*\d+)', reimbursement_section)
 
-        self.all_fields = p.parse_fields(reimbursement_section)
+        self.all_fields = parse.parse_fields(reimbursement_section)
         self._map_fields()
 
 
@@ -25,7 +25,7 @@ class Transaction():
 
     def __init__(self, transaction_section):
 
-        self.id = p.get_section_id(r'Transaction (\d*,*\d+)', transaction_section)
+        self.id = parse.get_section_id(r'Transaction (\d*,*\d+)', transaction_section)
         self.reimbursements = dict()
 
         # Check if there's any repayments connected to this transaction
@@ -35,7 +35,7 @@ class Transaction():
         if len(hash_lvls) > 1:
 
             # Split reimbursements
-            rb_sections = p.split_sections('####', transaction_section)
+            rb_sections = parse.split_sections('####', transaction_section)
 
             r = dict()
             for _, repay_str in rb_sections.items():
@@ -47,7 +47,7 @@ class Transaction():
 
             self.reimbursements = r
 
-        self.all_fields = p.parse_fields(transaction_section)
+        self.all_fields = parse.parse_fields(transaction_section)
         self._map_fields()
 
     def _map_fields(self):
@@ -78,7 +78,13 @@ class Transaction():
         return ';'.join(n) if n else None
 
     def serialize(self):
-        return [self.id, self.date, self.description, self.balance, self.type, p.nonetype_to_str(self.modified_category), p.nonetype_to_str(self.note)]
+        return [self.id, self.date, self.description, self.balance, self.type, nonetype_to_str(self.modified_category), nonetype_to_str(self.note)]
 
     def serialize_header(self):
         return ['ID', 'Date', 'Description', 'Balance', 'Type', 'Modified_Category', 'Note']
+
+
+def nonetype_to_str(n):
+    if n is None:
+        return 'None'
+    return n

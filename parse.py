@@ -1,22 +1,15 @@
 import re
 import ast
-import csv
-import argparse
 
 from datetime import datetime
 
 import models
+import export
 
 
 def get_section_id(re_id, section):
     m = re.findall(re_id, section)
     return int(m[0].replace(',', ''))
-
-
-def nonetype_to_str(n):
-    if n is None:
-        return 'None'
-    return n
 
 
 # Data example to match single_section
@@ -95,12 +88,6 @@ def get_uncategorized_transactions(transactions):
     return l
 
 
-def write_csv(filename, csv_list):
-    with open(filename, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerows(csv_list)
-
-
 def parse_export(filename, section_title, csv_filename):
 
     with open(filename, 'r') as f:
@@ -130,25 +117,6 @@ def parse_export(filename, section_title, csv_filename):
         l.sort(key=lambda x: x[1])
         l.insert(0, transactions[0].serialize_header())
 
-        write_csv(csv_filename, l)
+        export.write_csv(csv_filename, l)
 
         return transactions
-
-
-if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("tink_filename", help="Filename to tink export") # Ex: tink-export-2020-04-10.txt
-    parser.add_argument("section_to_parse", help="Section to parse") # Ex: Transactions
-    parser.add_argument("csv_filename", help="Filename of csv export") # Ex: filename of csv to be exported
-    args = parser.parse_args()
-
-
-    transactions = list()
-    if 'Transactions' in args.section_to_parse:
-        transactions = parse_export(args.tink_filename, 'Transactions:', args.csv_filename)
-
-    uncategorized = get_uncategorized_transactions(transactions)
-    uncategorized.sort(key=lambda x: x[1])
-    uncategorized.insert(0, transactions[0].serialize_header())
-    write_csv('uncategorized.csv', uncategorized)
