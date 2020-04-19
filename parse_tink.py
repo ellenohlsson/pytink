@@ -131,7 +131,6 @@ def parse_datatype(key, value):
         return None
 
 
-def parse_fields(section):
 # Example:
 # '    Amount:      123.0'
 # '    Description: asdf'
@@ -160,6 +159,17 @@ def get_transactions(sections):
     return transactions
 
 
+def get_uncategorized_transactions(transactions):
+    l = list()
+    for t in transactions:
+        if abs(t.balance) > 1.0:
+            if 'Default' in t.type:
+                if t.modified_category is None:
+                    l.append(t.serialize())
+
+    return l
+
+
 def write_csv(filename, csv_list):
     with open(filename, 'w', newline='') as f:
         writer = csv.writer(f)
@@ -179,7 +189,7 @@ def parse_export(filename, section_title, csv_filename):
             if abs(trans.balance) > 1.0:
                 if 'Transfer' not in trans.type:
                     if trans.modified_category:
-                        if 'Exkludera' not in trans.modified_category:
+                        if trans.modified_category not in ['Exkludera', 'Överföringar']:
                             return False
                     else:
                         return False
@@ -197,6 +207,8 @@ def parse_export(filename, section_title, csv_filename):
 
         write_csv(csv_filename, l)
 
+        return transactions
+
 
 if __name__ == '__main__':
 
@@ -206,5 +218,12 @@ if __name__ == '__main__':
     parser.add_argument("csv_filename", help="Filename of csv export") # Ex: filename of csv to be exported
     args = parser.parse_args()
 
+
+    transactions = list()
     if 'Transactions' in args.section_to_parse:
-        parse_export(args.tink_filename, 'Transactions:', args.csv_filename)
+        transactions = parse_export(args.tink_filename, 'Transactions:', args.csv_filename)
+
+    uncategorized = get_uncategorized_transactions(transactions)
+    uncategorized.sort(key=lambda x: x[1])
+    uncategorized.insert(0, transactions[0].serialize_header())
+    write_csv('uncategorized.csv', uncategorized)
