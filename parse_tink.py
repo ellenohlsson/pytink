@@ -63,6 +63,7 @@ class Transaction():
         self.amount = f['Amount']
         self.balance = self.amount - self.sum_reimbursements()
         self.type = f['Type']
+        self.note = self.parse_note(f['Note'])
 
         # Optional field
         try:
@@ -76,11 +77,15 @@ class Transaction():
             sum += r.amount
         return sum
 
+    def parse_note(self, note):
+        n = re.findall(r'#(\w+)', note if note else '')
+        return ';'.join(n) if n else None
+
     def serialize(self):
-        return [self.id, self.date, self.description, self.balance, self.type, nonetype_to_str(self.modified_category)]
+        return [self.id, self.date, self.description, self.balance, self.type, nonetype_to_str(self.modified_category), nonetype_to_str(self.note)]
 
     def serialize_header(self):
-        return ['ID', 'Date', 'Description', 'Balance', 'Type', 'Modified Category']
+        return ['ID', 'Date', 'Description', 'Balance', 'Type', 'Modified_Category', 'Note']
 
 
 def get_section_id(re_id, section):
