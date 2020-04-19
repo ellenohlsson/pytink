@@ -5,7 +5,7 @@ import parse as p
 class Reimbursement():
 
     def __init__(self, reimbursement_section):
-        self.id = p.get_section_id('- Part (\d*,*\d+)', reimbursement_section)
+        self.id = p.get_section_id(r'- Part (\d*,*\d+)', reimbursement_section)
 
         self.all_fields = p.parse_fields(reimbursement_section)
         self._map_fields()
@@ -25,7 +25,7 @@ class Transaction():
 
     def __init__(self, transaction_section):
 
-        self.id = p.get_section_id('Transaction (\d*,*\d+)', transaction_section)
+        self.id = p.get_section_id(r'Transaction (\d*,*\d+)', transaction_section)
         self.reimbursements = dict()
 
         # Check if there's any repayments connected to this transaction

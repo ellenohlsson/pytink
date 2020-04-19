@@ -24,11 +24,11 @@ def nonetype_to_str(n):
 # WHATEVER (.*?)
 # ## Section 2 OR end of sections (?=^## |\Z)
 def split_sections(delimiter, data):
-    single_sections = '^{} \w+.*?(?=^{} |\Z)'.format(delimiter, delimiter)
+    single_sections = r'^{} \w+.*?(?=^{} |\Z)'.format(delimiter, delimiter)
     sections = re.findall(single_sections, data, re.S | re.M)
 
     d = dict()
-    section_name = '^{} (.+)$'.format(delimiter)
+    section_name = r'^{} (.+)$'.format(delimiter)
     for section in sections:
         key = re.match(section_name, section, re.M).group(1)
 
@@ -60,7 +60,7 @@ def parse_datatype(key, value):
 # '    Amount:      123.0'
 # '    Description: asdf'
 def parse_fields(section):
-    re_fields = '^\s+(.+):\s+?(.*?)$'
+    re_fields = r'^\s+(.+):\s+?(.*?)$'
     match = re.findall(re_fields, section, re.M)
 
     d = dict()
