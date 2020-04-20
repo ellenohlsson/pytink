@@ -1,5 +1,8 @@
 import re
 
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
 import parse
 
 class Reimbursement():
@@ -67,6 +70,9 @@ class Transaction():
         except:
             self.modified_category = None
 
+        # For extend functionality (optionally added later)
+        self.months_extend = None
+
     def sum_reimbursements(self):
         sum = 0
         for _, r in self.reimbursements.items():
@@ -78,10 +84,43 @@ class Transaction():
         return ';'.join(n) if n else None
 
     def serialize(self):
-        return [self.id, self.date, self.description, self.balance, self.type, nonetype_to_str(self.modified_category), nonetype_to_str(self.note)]
+        if not self.months_extend:
+            return iter([[self.id,
+                    self.date,
+                    self.description,
+                    self.balance,
+                    self.type,
+                    nonetype_to_str(self.modified_category),
+                    nonetype_to_str(self.note)]])
+        else:
+
+            # Extend the transaction (split the cost on more months than transaction date)
+            r = list()
+            for m in range(self.months_extend + 1):
+                extended_date = self.date + relativedelta(months=m)
+
+                # Do not extend a transaction past todays date
+                if extended_date > date.today():
+                    break
+
+                r.append([self.id,
+                          extended_date,
+                          self.description,
+                          round(self.balance / (self.months_extend + 1)),
+                          self.type,
+                          nonetype_to_str(self.modified_category),
+                          nonetype_to_str(self.note)])
+
+            return iter(r)
 
     def serialize_header(self):
-        return ['ID', 'Date', 'Description', 'Balance', 'Type', 'Modified_Category', 'Note']
+        return ['ID',
+                'Date',
+                'Description',
+                'Balance',
+                'Type',
+                'Modified_Category',
+                'Note']
 
 
 def nonetype_to_str(n):

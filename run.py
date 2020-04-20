@@ -2,6 +2,7 @@ import argparse
 
 import parse
 import export
+import extend
 
 if __name__ == '__main__':
 
@@ -20,3 +21,15 @@ if __name__ == '__main__':
     uncategorized.sort(key=lambda x: x[1])
     uncategorized.insert(0, transactions[0].serialize_header())
     export.write_csv('uncategorized.csv', uncategorized)
+
+    # Extend transactions
+    extend.extend_transaction(transactions)
+    l = list()
+    for t in transactions:
+        serialized_obj = t.serialize()
+        for s in serialized_obj:
+            l.append(s)
+
+    l.sort(key=lambda x: x[1])
+    l.insert(0, transactions[0].serialize_header())
+    export.write_csv('extended.csv', l)

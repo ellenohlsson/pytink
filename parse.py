@@ -37,7 +37,7 @@ def split_sections(delimiter, data):
 def parse_datatype(key, value):
     if value:
         if 'Date' in key or 'Updated' in key:
-            return datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ')
+            return datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ').date()
         elif 'Amount' in key:
             return float(value)
         elif 'Payload' in key:
@@ -83,7 +83,9 @@ def get_uncategorized_transactions(transactions):
         if abs(t.balance) > 1.0:
             if 'Default' in t.type:
                 if t.modified_category is None:
-                    l.append(t.serialize())
+                    serialized_obj = t.serialize()
+                    for s in serialized_obj:
+                        l.append(s)
 
     return l
 
@@ -111,7 +113,9 @@ def parse_export(filename, section_title, csv_filename):
         # Prepare CSV output
         for t in transactions:
             if not _exclude(t):
-                l.append(t.serialize())
+                serialized_obj = t.serialize()
+                for s in serialized_obj:
+                    l.append(s)
 
         # Sort by date and add header
         l.sort(key=lambda x: x[1])
