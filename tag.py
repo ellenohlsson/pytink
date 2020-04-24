@@ -6,7 +6,7 @@ import export
 
 
 # Assumes that all transactions have no category
-def count_transactions(transactions):
+def export_uncategorized(transactions, filename):
 
     # Make sure transactions are sorted by date
     transactions.sort(key=lambda x: x.date)
@@ -27,7 +27,7 @@ def count_transactions(transactions):
         l.append([description,
                   original_description,
                   count[1],
-                  date_last_transaction((description, original_description), transactions),
+                  _date_last_transaction((description, original_description), transactions),
                   'None'])
 
     # CSV Header
@@ -37,11 +37,11 @@ def count_transactions(transactions):
                  'last_transaction',
                  'category'])
 
-    export.write_csv('tag_temp.csv', l)
+    export.write_csv(filename, l)
 
 
 # Expects transactions to be sorted by date, ascending.
-def date_last_transaction(descriptions, transactions):
+def _date_last_transaction(descriptions, transactions):
     for t in reversed(transactions):
         if t.description == descriptions[0] and \
            t.original_description == descriptions[1]:

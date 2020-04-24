@@ -5,6 +5,7 @@ from datetime import datetime
 
 import models
 import export
+import transaction
 
 
 def get_section_id(re_id, section):
@@ -69,7 +70,7 @@ def parse_fields(section):
     return d
 
 
-def get_transactions(sections):
+def _instantiate_transactions(sections):
     transactions = list()
     for _, section in sections.items():
         transactions.append(models.Transaction(section))
@@ -77,42 +78,19 @@ def get_transactions(sections):
     return transactions
 
 
-def get_uncategorized_transactions(transactions):
-    l = list()
-    for t in transactions:
-        if abs(t.balance) > 1.0:
-            if 'Default' in t.type:
-                if t.modified_category is None:
-                    serialized_obj = t.serialize()
-                    for s in serialized_obj:
-                        l.append(s)
-
-    return l
-
-
-def parse_export(filename, section_title, csv_filename):
+def transactions(filename, section_title, csv_filename):
 
     with open(filename, 'r') as f:
         fcontent = f.read()
 
         section_top = split_sections('##', fcontent)
         section_trans = split_sections('###', section_top[section_title])
-        transactions = get_transactions(section_trans)
-
-        def _exclude(trans):
-            if abs(trans.balance) > 1.0:
-                if 'Transfer' not in trans.type:
-                    if trans.modified_category:
-                        if trans.modified_category not in ['Exkludera', 'Överföringar']:
-                            return False
-                    else:
-                        return False
-            return True
+        transactions = _instantiate_transactions(section_trans)
 
         l = list()
         # Prepare CSV output
         for t in transactions:
-            if not _exclude(t):
+            if not transaction.default_exclusion(t):
                 serialized_obj = t.serialize()
                 for s in serialized_obj:
                     l.append(s)

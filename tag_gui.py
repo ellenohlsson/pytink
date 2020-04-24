@@ -34,8 +34,8 @@ def match_categories(input, categories):
         # Search for partial matches
         m = re.search(input, c, re.I)
         try:
-            early_metric = m.span(0)[0]               # We're does match start?
-            span_metric  = m.span(0)[1] - m.span(0)[0] # How many chars was matched?
+            early_metric = m.span(0)[0]                # We're does match start?
+            span_metric  = m.span(0)[1] - m.span(0)[0] # How many chars were matched?
         except:
             early_metric = -1
             span_metric  = -1
@@ -75,7 +75,7 @@ def _enable_buttons(idx, window):
 
 
 # Import data
-tag_file = 'tag_temp.csv'
+tag_file = 'tags.csv'
 (tags, csv_fieldnames) = export.read_csv(tag_file)
 transaction_count = num_transactions(tags, 0)
 
