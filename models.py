@@ -4,6 +4,7 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 
 import parse
+import export
 
 class Reimbursement():
 
@@ -90,8 +91,8 @@ class Transaction():
                     self.description,
                     self.balance,
                     self.type,
-                    nonetype_to_str(self.modified_category),
-                    nonetype_to_str(self.note)]])
+                    export.nonetype_to_str(self.modified_category),
+                    export.nonetype_to_str(self.note)]])
         else:
 
             # Extend the transaction (split the cost on more months than transaction date)
@@ -108,8 +109,8 @@ class Transaction():
                           self.description,
                           round(self.balance / (self.months_extend + 1)),
                           self.type,
-                          nonetype_to_str(self.modified_category),
-                          nonetype_to_str(self.note)])
+                          export.nonetype_to_str(self.modified_category),
+                          export.nonetype_to_str(self.note)])
 
             return iter(r)
 
@@ -121,9 +122,3 @@ class Transaction():
                 'Type',
                 'Modified_Category',
                 'Note']
-
-
-def nonetype_to_str(n):
-    if n is None:
-        return 'None'
-    return n

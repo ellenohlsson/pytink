@@ -1,0 +1,6 @@
+__pycache__
+.vscode
+.devcontainer.json
+*.csv
+*.txt
+.DS_Store
