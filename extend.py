@@ -2,8 +2,10 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from itertools import tee, islice, chain
 
-def extend_transaction(transactions):
+def transactions(transactions):
 
+    # TODO: add a field that says how many months to extend if only 1 transition exists.
+    # Currently the algorithm needs two transactions to figure out a third and last extension.
     extend_by = [
         {
         'description' : 'Bredband2',
@@ -24,7 +26,7 @@ def extend_transaction(transactions):
         # Find all related transactions
         related = [t
             for t in transactions
-            if t.description == ext['description'] or
+            if t.description == ext['description'] and
                t.original_description == ext['original_description']
         ]
 

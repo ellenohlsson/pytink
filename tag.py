@@ -6,7 +6,7 @@ import export
 
 
 # Assumes that all transactions have no category
-def export_uncategorized(transactions, filename):
+def for_ui(transactions, filename):
 
     # Make sure transactions are sorted by date
     transactions.sort(key=lambda x: x.date)
@@ -50,3 +50,27 @@ def _date_last_transaction(descriptions, transactions):
 
     print('WARNING: Found no match for description. (tag.py)')
     return None
+
+
+def apply(tags, transactions):
+
+    for t in tags:
+
+        if t['category'] != 'None':
+            # Find all related transactions
+            related = [tr
+                for tr in transactions
+                if tr.modified_category == None and
+                tr.description == t['description'] and
+                tr.original_description == t['original_description']
+            ]
+
+            # Assign category
+            if len(related) > 0:
+                for r in related:
+                    r.modified_category = t['category']
+            else:
+                # This probably means that an older tags file have the same
+                # tag as a never tags file.
+                # This can be a problem if category is not the same for both.
+                print('WARNING: tag {} could not be applied.'.format(t))

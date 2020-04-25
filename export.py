@@ -1,3 +1,4 @@
+from datetime import datetime
 import csv
 
 
@@ -31,3 +32,7 @@ def nonetype_to_str(n):
     if n is None:
         return 'None'
     return n
+
+
+def date():
+    return datetime.now().strftime('%Y-%m-%d_%H%M')

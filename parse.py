@@ -92,7 +92,7 @@ def transactions(filename, section_title, csv_filename):
         for t in transactions:
             if not transaction.default_exclusion(t):
                 serialized_obj = t.serialize()
-                for s in serialized_obj:
+                for s in serialized_obj: # Handles extended transactions
                     l.append(s)
 
         # Sort by date and add header
