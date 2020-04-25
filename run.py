@@ -1,4 +1,5 @@
 import argparse
+import os
 
 import parse
 import export
@@ -16,15 +17,17 @@ if __name__ == '__main__':
     transactions.sort(key=lambda x: x.date)
 
     # Apply existing tags
-    # TODO read all tags files and apply
-    (tags, _) = export.read_csv('tags.csv')
-    tag.apply(tags, transactions)
+    for f in tag.filenames(os.getcwd()):
+        (tags, _) = export.read_csv(f)
+        tag.apply(tags, transactions)
 
-    # Find still uncategorized transactions and export for tagging gui
+    # TODO: filter out unwanted transactions
+
+    # Find still uncategorized transactions and export for tagging
     uncategorized = transaction.uncategorized(transactions)
     if len(uncategorized) > 0:
         filename = 'tags_{}.csv'.format(export.date())
-        tag.for_ui(uncategorized, filename)
+        tag.export(uncategorized, filename)
 
     # Extend transactions
     extend.transactions(transactions)

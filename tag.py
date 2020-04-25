@@ -1,12 +1,14 @@
 from collections import Counter
 from datetime import date
+import glob
+import os
 import operator
 
-import export
+from export import write_csv
 
 
 # Assumes that all transactions have no category
-def for_ui(transactions, filename):
+def export(transactions, filename):
 
     # Make sure transactions are sorted by date
     transactions.sort(key=lambda x: x.date)
@@ -37,7 +39,7 @@ def for_ui(transactions, filename):
                  'last_transaction',
                  'category'])
 
-    export.write_csv(filename, l)
+    write_csv(filename, l)
 
 
 # Expects transactions to be sorted by date, ascending.
@@ -74,3 +76,16 @@ def apply(tags, transactions):
                 # tag as a never tags file.
                 # This can be a problem if category is not the same for both.
                 print('WARNING: tag {} could not be applied.'.format(t))
+
+
+def filenames(dir):
+    cwd = os.getcwd()
+    os.chdir(dir)
+
+    l = list()
+    for f in glob.glob('tags_*-*-*_*.csv'):
+        l.append(f)
+
+    os.chdir(cwd)
+
+    return l

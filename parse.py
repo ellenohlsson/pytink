@@ -87,6 +87,7 @@ def transactions(filename, section_title, csv_filename):
         section_trans = split_sections('###', section_top[section_title])
         transactions = _instantiate_transactions(section_trans)
 
+        # TODO: factor out
         l = list()
         # Prepare CSV output
         for t in transactions:
