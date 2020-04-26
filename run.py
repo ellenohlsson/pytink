@@ -14,12 +14,16 @@ if __name__ == '__main__':
     transactions.sort(key=lambda x: x.date)
     export.transactions(transactions, 'raw_transactions_{}.csv'.format(export.date()))
 
+    # Filter out unwanted transactions (transfers and manual excludes)
+    transactions = [t for t in transactions if not transaction.filter_exclude(t)]
+
     # Apply existing tags
     for f in tag.filenames(os.getcwd()):
         (tags, _) = export.read_csv(f)
         tag.apply(tags, transactions)
 
-    # TODO: filter out unwanted transactions
+    # Filter out new unwanted transactions after applied tags (tagged transfers)
+    transactions = [t for t in transactions if not transaction.filter_exclude(t)]
 
     # Find still uncategorized transactions and export for tagging
     uncategorized = transaction.uncategorized(transactions)

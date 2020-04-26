@@ -1,8 +1,9 @@
-def default_exclusion(trans):
-    if abs(trans.balance) > 1.0:
-        if 'Transfer' not in trans.type:
-            if trans.modified_category:
-                if trans.modified_category not in ['Exkludera', 'Överföringar']:
+def filter_exclude(transaction):
+
+    if abs(transaction.balance) > 1.0:
+        if 'Transfer' not in transaction.type:
+            if transaction.modified_category:
+                if transaction.modified_category not in ['Exkludera', 'Överföringar']:
                     return False
             else:
                 return False
