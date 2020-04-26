@@ -87,12 +87,12 @@ class Transaction():
     def serialize(self):
         if not self.months_extend:
             return iter([[self.id,
-                    self.date,
-                    self.description,
-                    self.balance,
-                    self.type,
-                    export.nonetype_to_str(self.modified_category),
-                    export.nonetype_to_str(self.note)]])
+                          self.date,
+                          self.description,
+                          self.original_description,
+                          self.balance,
+                          export.nonetype_to_str(self.modified_category),
+                          export.nonetype_to_str(self.note)]])
         else:
 
             # Extend the transaction (split the cost on more months than transaction date)
@@ -107,8 +107,8 @@ class Transaction():
                 r.append([self.id,
                           extended_date,
                           self.description,
+                          self.original_description,
                           round(self.balance / (self.months_extend + 1)),
-                          self.type,
                           export.nonetype_to_str(self.modified_category),
                           export.nonetype_to_str(self.note)])
 
@@ -118,7 +118,7 @@ class Transaction():
         return ['ID',
                 'Date',
                 'Description',
+                'Original_Description'
                 'Balance',
-                'Type',
                 'Modified_Category',
                 'Note']
