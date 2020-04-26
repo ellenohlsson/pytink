@@ -10,11 +10,9 @@ import transaction
 
 if __name__ == '__main__':
 
-    transactions = list()
-    transactions = parse.transactions('tink-export-2020-04-19.txt',
-                                      'Transactions:',
-                                      'raw_transactions_{}.csv'.format(export.date()))
+    transactions = parse.transactions('tink-export-2020-04-19.txt')
     transactions.sort(key=lambda x: x.date)
+    export.transactions(transactions, 'raw_transactions_{}.csv'.format(export.date()))
 
     # Apply existing tags
     for f in tag.filenames(os.getcwd()):

@@ -36,3 +36,18 @@ def nonetype_to_str(n):
 
 def date():
     return datetime.now().strftime('%Y-%m-%d_%H%M')
+
+
+def transactions(transactions, filename):
+
+    # Prepare CSV output
+    l = list()
+    for t in transactions:
+        serialized_obj = t.serialize()
+        for s in serialized_obj: # Handles extended transactions
+            l.append(s)
+
+    # Add header
+    l.insert(0, transactions[0].serialize_header())
+
+    write_csv(filename, l)

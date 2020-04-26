@@ -78,7 +78,8 @@ def _instantiate_transactions(sections):
     return transactions
 
 
-def transactions(filename, section_title, csv_filename):
+def transactions(filename):
+    section_title = 'Transactions:'
 
     with open(filename, 'r') as f:
         fcontent = f.read()
@@ -86,20 +87,5 @@ def transactions(filename, section_title, csv_filename):
         section_top = split_sections('##', fcontent)
         section_trans = split_sections('###', section_top[section_title])
         transactions = _instantiate_transactions(section_trans)
-
-        # TODO: factor out
-        l = list()
-        # Prepare CSV output
-        for t in transactions:
-            if not transaction.default_exclusion(t):
-                serialized_obj = t.serialize()
-                for s in serialized_obj: # Handles extended transactions
-                    l.append(s)
-
-        # Sort by date and add header
-        l.sort(key=lambda x: x[1])
-        l.insert(0, transactions[0].serialize_header())
-
-        export.write_csv(csv_filename, l)
 
         return transactions
