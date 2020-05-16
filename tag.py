@@ -6,9 +6,6 @@ import operator
 
 from export import write_csv
 
-# TODO add automatic tag for fixed expenses (like Hyra, Fackavgift)
-# TODO add manual tag file to tag fixed expenses etc
-
 # Assumes that all transactions have no category
 def export(transactions, filename):
 
