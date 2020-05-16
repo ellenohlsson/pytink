@@ -4,8 +4,12 @@ from itertools import tee, islice, chain
 
 def transactions(transactions):
 
-    # TODO: add a field that says how many months to extend if only 1 transition exists.
-    # Currently the algorithm needs two transactions to figure out a third and last extension.
+    # TODO add extension of whole catetegory
+    # TODO add support for multiple descriptions because some companies change over time
+    # TODO add a field that says how many months to extend if only 1 transition exists.
+    #      Currently the algorithm needs two transactions to figure out a third and last extension.
+    # TODO add minimum sum to extend
+    # TODO indicate in tag that transaction is an extension
     extend_by = [
         {
         'description' : 'Bredband2',
