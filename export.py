@@ -1,6 +1,5 @@
 from datetime import datetime
 import csv
-# TODO rename module to export_csv
 
 
 # TODO replace with dictwriter_csv

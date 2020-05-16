@@ -82,7 +82,6 @@ transaction_count = num_transactions(tags, 0)
 # Sort tags to have untagged first
 tags.sort(key=lambda x: 1 if x['category'] == 'None' else 0, reverse=True)
 
-# TODO add a button to see all categories
 layout = [[sg.Text('Tag transaction:', font=('Helvetica', 8, 'bold'))],
           [sg.Text('description', size=(26, 1), font=('Helvetica', 12), key='description'), sg.Text('last_transaction', size=(15, 1), font=('Helvetica', 12), key='last_transaction')],
           [sg.Text('original_description', size=(26, 1), font=('Helvetica', 12), key='original_description'), sg.Text('transaction_count', size=(15, 1), font=('Helvetica', 12), key='transaction_count')],
