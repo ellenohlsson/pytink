@@ -14,9 +14,9 @@ This project is work in progress and can currently only:
 \* By uncategorized transaction I unfortunately mean all transactions you've let Tink automatically label.
 The GDPR export only contains categorise for transactions you've manually changed.
 
-To do a Tink GDPR dump head over to https://account.tink.se, sign in and do a dump.
+To do a Tink GDPR dump head over to [Tink](https://account.tink.se), sign in and do a dump.
 Next, open run.py and tinker around. 
 Aim is to eventually use pytink as a module and move run.py out of it.
 
-Currently this project is more mature than my expense graph project rexpense,
+Currently this project is more mature than my expense graph project [rexpense](https://github.com/ellenohlsson/rexpense),
 but if you feel like checking that out I've decided to also make that public.
