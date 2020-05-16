@@ -2,7 +2,7 @@
 Parser for Tink GDPR dump with some added features not available in Tink itself
 
 Project came about since Tink doesn't offer it's users the option of exporting
-their data and do more in depth analysis of the spending.
+their data in a reasonable format and do more in depth analysis of the spending.
 
 This project is work in progress and can currently only:
 * parse the transaction and reimbursement part of the GDPR dump reliably.
