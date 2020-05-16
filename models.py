@@ -84,6 +84,9 @@ class Transaction():
         n = re.findall(r'#(\w+)', note if note else '')
         return ';'.join(n) if n else None
 
+    def add_note(self, note):
+        self.note = self.note + ';' + note if self.note else note
+
     def serialize(self):
         if not self.months_extend:
             return iter([[self.id,

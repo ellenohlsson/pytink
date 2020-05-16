@@ -9,7 +9,6 @@ def transactions(transactions):
     # TODO add a field that says how many months to extend if only 1 transition exists.
     #      Currently the algorithm needs two transactions to figure out a third and last extension.
     # TODO add minimum sum to extend
-    # TODO indicate in tag that transaction is an extension
     extend_by = [
         {
         'description' : 'Bredband2',
@@ -62,3 +61,5 @@ def transactions(transactions):
                 r.months_extend = _get_interval()
             else:
                 r.months_extend = r_prev.months_extend
+
+            r.add_note('Extended_pytink')
