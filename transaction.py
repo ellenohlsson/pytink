@@ -14,9 +14,8 @@ def filter_exclude(transaction):
 def uncategorized(transactions):
     l = list()
     for t in transactions:
-        if abs(t.balance) > 1.0:
-            if 'Default' in t.type:
-                if t.modified_category is None:
-                    l.append(t)
+        if 'Default' in t.type:
+            if t.modified_category is None:
+                l.append(t)
 
     return l

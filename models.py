@@ -118,7 +118,7 @@ class Transaction():
         return ['ID',
                 'Date',
                 'Description',
-                'Original_Description'
+                'Original_Description',
                 'Balance',
                 'Modified_Category',
                 'Note']
