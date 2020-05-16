@@ -6,13 +6,13 @@ their data and do more in depth analysis of the spending.
 
 This project is work in progress and can currently only:
 * parse the transaction and reimbursement part of the GDPR dump reliably.
-* tag uncategorized\* transactions in custom GUI.
+* tag uncategorized\* transactions in a custom GUI.
 * extend configured transactions to divide amount per month until next transaction.
 * filter transactions in some rudimentary way.
 * export CSV of either raw or treated transactions.
 
 \* By uncategorized transaction I unfortunately mean all transactions you've let Tink automatically label.
-The GDPR export only contains categorise for transactions you've manually changed.
+The GDPR export only contains categories for transactions you've manually changed.
 
 To do a Tink GDPR dump head over to [Tink](https://account.tink.se), sign in and do a dump.
 Next, open run.py and tinker around. 
