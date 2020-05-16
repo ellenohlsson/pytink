@@ -10,6 +10,7 @@ import transaction
 
 if __name__ == '__main__':
 
+    # Load GDPR dump and parse transactions from it
     transactions = parse.transactions('tink-export-2020-04-19.txt')
     transactions.sort(key=lambda x: x.date)
     export.transactions(transactions, 'raw_transactions_{}.csv'.format(export.date()))
@@ -33,14 +34,7 @@ if __name__ == '__main__':
 
     # Extend transactions
     extend.transactions(transactions)
+    transactions.sort(key=lambda x: x.date)
 
     # Export final transactions
-    l = list()
-    for t in transactions:
-        serialized_obj = t.serialize()
-        for s in serialized_obj: # Handles extended transactions
-            l.append(s)
-
-    l.sort(key=lambda x: x[1])
-    l.insert(0, transactions[0].serialize_header())
-    export.write_csv('transactions_{}.csv'.format(export.date()), l)
+    export.transactions(transactions, 'transactions_{}.csv'.format(export.date()))

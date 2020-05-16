@@ -48,7 +48,8 @@ def transactions(transactions, filename):
         for s in serialized_obj: # Handles extended transactions
             l.append(s)
 
-    # Add header
+    # Sort and add header
+    l.sort(key=lambda x: x[1])
     l.insert(0, transactions[0].serialize_header())
 
     write_csv(filename, l)
