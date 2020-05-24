@@ -1,0 +1,53 @@
+transaction:
+
+  - name: Bredband2
+    description:
+      - [Bredband2, BREDBAND2 AB]
+    end_date: 2020-09-01
+
+  - name: IF Skadeförsäkring
+    description:
+      - [If Skadeförsäk, IF SKADEFÖRSÄK]
+    end_date: 2020-12-01
+
+  - name: Bilsport & MC
+    description:
+      - ['Bilsport & Mc/', 'BILSPORT & MC/']
+      - ['Moderna Försäk', 'MODERNA FÖRSÄK']
+    start_date: 2017-10-01
+
+  - name: Euro Accident
+    description:
+      - ['Euro Accident', 'EURO ACCIDENT']
+    end_date: 2020-12-01
+
+  - name: Sveriges Ingenjörer
+    description:
+      - ['Sveriges Ingen', 'SVERIGES INGEN']
+    end_date: 2020-12-01
+
+  - name: HSB Göteborg
+    description:
+      - ['1000 HSB Göteb', '1000 HSB Göteb']
+    end_date: 2019-02-01
+
+  - name: Kenneths MC-Service
+    description:
+      - ['Kenneths MC-Se', 'Kenneths MC-Se']
+
+  - name: Friskis & Svettis
+    description:
+      - ['Friskis&svetti', 'FRISKIS&SVETTI']
+    min_amount: 500
+
+  - name: Altro Hair
+    description:
+      - ['Altro Hair', 'ALTRO HAIR AB']
+      - ['Altro', 'ALTRO']
+    min_amount: 600
+
+  - name: TicketMaster
+    description:
+      - ['Ticketmaster S', 'Ticketmaster S']
+    default_months: 3   # if only one transaction exists so far, this is how far to extend
+

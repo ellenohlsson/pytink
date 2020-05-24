@@ -33,7 +33,7 @@ if __name__ == '__main__':
         tag.export(uncategorized, filename)
 
     # Extend transactions
-    extend.transactions(transactions)
+    extend.transactions(transactions, 'extend.yaml')
     transactions.sort(key=lambda x: x.date)
 
     # Export final transactions
