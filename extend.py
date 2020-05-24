@@ -101,10 +101,10 @@ def transactions(transactions, config_file):
                 if 'default_months' in config:
                     t.months_extend = config['default_months'] - 1
                 else:
-                    print(('WARNING: transaction with description "{}" has only happened once '
-                           'hence default_months needs to be in configuration. Skipping extension.'
-                    ).format(t.description))
+                    print(('WARNING: extend rule "{}" found only one transaction. '
+                           'Hence default_months needs to be in configuration. Skipping rule.'
+                    ).format(config['rule']))
                     break
 
             if t.months_extend > 0:
-                t.add_note('Extended_' + config['name'].replace(' ', '_'))
+                t.add_note('Extended_' + config['rule'].replace(' ', '_'))

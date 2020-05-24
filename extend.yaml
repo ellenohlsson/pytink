@@ -2,7 +2,7 @@ transaction:
 
   ### Example entry:
   #
-  # - name: Some Name # Mandatory. Will be added as a tag "Extended_Some_Name"
+  # - rule: Some Name # Mandatory. Will be added as a tag "Extended_Some_Name"
   #   description:    # Mandatory. Some companies change their transaction descriptions, list all.
   #     - [transaction_description, original_transaction_description]
   #     - [transaction_description, original_transaction_description]
@@ -12,47 +12,47 @@ transaction:
   #   max_amount: -10000     # Optional.
   #   default_months: 3      # Optional. Time to extend if transaction is unique
 
-  - name: Broadband
+  - rule: Broadband
     description:
       - [Bredband2, BREDBAND2 AB]
     end_date: 2020-09-01 # After this date I paid monthly
 
-  - name: Home Insurance
+  - rule: Home Insurance
     description:
       - [If Skadeförsäk, IF SKADEFÖRSÄK]
     end_date: 2020-12-01 # After this date I paid monthly
 
-  - name: MC Insurance
+  - rule: MC Insurance
     description:
       - ['Bilsport & Mc/', 'BILSPORT & MC/']
       - ['Moderna Försäk', 'MODERNA FÖRSÄK']
 
-  - name: Accident Insurance
+  - rule: Accident Insurance
     description:
       - ['Euro Accident', 'EURO ACCIDENT']
     end_date: 2020-12-01 # After this date I paid monthly
 
-  - name: Union
+  - rule: Union
     description:
       - ['Sveriges Ingen', 'SVERIGES INGEN']
     end_date: 2020-12-01 # After this date I paid monthly
 
-  - name: HSB Göteborg
+  - rule: HSB Göteborg
     description:
       - ['1000 HSB Göteb', '1000 HSB Göteb']
     end_date: 2019-02-01 # Ended my membership
 
-  - name: MC Service
+  - rule: MC Service
     description:
       - ['Kenneths MC-Se', 'Kenneths MC-Se']
     default_months: 3   # Months to split unique transaction
 
-  - name: Gym
+  - rule: Gym
     description:
       - ['Friskis&svetti', 'FRISKIS&SVETTI']
     min_amount: -1500 # Only membership fees
 
-  - name: Hairdresser
+  - rule: Hairdresser
     description:
       - ['Altro Hair', 'ALTRO HAIR AB']
       - ['Altro', 'ALTRO']
