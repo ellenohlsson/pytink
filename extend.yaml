@@ -10,6 +10,7 @@ transaction:
   #   end_date: 2020-12-31   # Optional.
   #   min_amount: -500       # Optional. Negative indicates that it is a cost
   #   max_amount: -10000     # Optional.
+  #   default_months: 3      # Optional. Time to extend if transaction is unique
 
   - name: Broadband
     description:
@@ -57,10 +58,3 @@ transaction:
       - ['Altro', 'ALTRO']
       - ['Sally Dawit', 'SALLY DAWIT']
     min_amount: -480 # Skip products etc
-
-
-  - name: TicketMaster
-    description:
-      - ['Ticketmaster S', 'Ticketmaster S']
-    default_months: 3   # if only one transaction exists so far, this is how far to extend
-
