@@ -67,6 +67,8 @@ def transactions(transactions, config_file):
         # Go through optional configuration fields and do more filtering
         related = _filter_related_transactions(related, config)
 
+        ### Extend transactions
+
         def _get_interval():
             rel = relativedelta(t_next.date - relativedelta(months=1), t.date)
             if rel.days > 24: # TODO Tune this.
@@ -74,7 +76,6 @@ def transactions(transactions, config_file):
             else:
                 return rel.months
 
-        ### Extend transactions
         for t_prev, t, t_next in _prev_and_nxt(related):
 
             if t_next:
