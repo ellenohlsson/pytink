@@ -24,14 +24,24 @@ def _filter_related_transactions(related, config):
                 continue
 
         if 'min_amount' in config:
-            if abs(t.balance) < config['min_amount']:
-                related.remove(t)
-                continue
+            if config['min_amount'] < 0:
+                if t.balance > config['min_amount']:
+                    related.remove(t)
+                    continue
+            else:
+                if t.balance < config['min_amount']:
+                    related.remove(t)
+                    continue
 
         if 'max_amount' in config:
-            if abs(t.balance) > config['max_amount']:
-                related.remove(t)
-                continue
+            if config['max_amount'] < 0:
+                if t.balance < config['max_amount']:
+                    related.remove(t)
+                    continue
+            else:
+                if t.balance > config['max_amount']:
+                    related.remove(t)
+                    continue
 
     return related
 
@@ -96,4 +106,5 @@ def transactions(transactions, config_file):
                     ).format(t.description))
                     break
 
-            t.add_note('Extended_' + config['name'].replace(' ', '_'))
+            if t.months_extend > 0:
+                t.add_note('Extended_' + config['name'].replace(' ', '_'))
