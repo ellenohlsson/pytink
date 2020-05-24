@@ -43,6 +43,11 @@ def _filter_related_transactions(related, config):
                     related.remove(t)
                     continue
 
+        if 'category' in config:
+            if t.modified_category != config['category']:
+                related.remove(t)
+                continue
+
     return related
 
 

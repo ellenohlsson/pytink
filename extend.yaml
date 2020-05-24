@@ -2,15 +2,16 @@ transaction:
 
   ### Example entry:
   #
-  # - rule: Some Name # Mandatory. Will be added as a tag "Extended_Some_Name"
+  # - rule: Some Name # Mandatory. Will be added as a tag "Extended_Some_Name".
   #   description:    # Mandatory. Some companies change their transaction descriptions, list all.
   #     - [transaction_description, original_transaction_description]
-  #     - [transaction_description, original_transaction_description]
+  #     - [transaction_description2, original_transaction_description2]
   #   start_date: 2020-01-01 # Optional.
   #   end_date: 2020-12-31   # Optional.
-  #   min_amount: -500       # Optional. Negative indicates that it is a cost
+  #   min_amount: -500       # Optional. Negative indicates that it is a cost.
   #   max_amount: -10000     # Optional.
-  #   default_months: 3      # Optional. Time to extend if transaction is unique
+  #   default_months: 3      # Optional. Time to extend if transaction is unique.
+  #   category: Hobby        # Optional.
 
   - rule: Broadband
     description:
@@ -45,7 +46,8 @@ transaction:
   - rule: MC Service
     description:
       - ['Kenneths MC-Se', 'Kenneths MC-Se']
-    default_months: 3   # Months to split unique transaction
+    default_months: 12
+    category: Hobby
 
   - rule: Gym
     description:
