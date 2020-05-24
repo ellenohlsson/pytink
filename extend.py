@@ -9,71 +9,90 @@ def _load_config(config_file):
     return config.load_config(config_file)
 
 
+def _filter_related_transactions(related, config):
+
+    for t in related:
+
+        if 'start_date' in config:
+            if t.date < config['start_date']:
+                related.remove(t)
+                continue
+
+        if 'end_date' in config:
+            if t.date > config['end_date']:
+                related.remove(t)
+                continue
+
+        if 'min_amount' in config:
+            if abs(t.balance) < config['min_amount']:
+                related.remove(t)
+                continue
+
+        if 'max_amount' in config:
+            if abs(t.balance) > config['max_amount']:
+                related.remove(t)
+                continue
+
+    return related
+
+
+def _prev_and_nxt(some_iterable):
+            prevs, items, nexts = tee(some_iterable, 3)
+            prevs = chain([None], prevs)
+            nexts = chain(islice(nexts, 1, None), [None])
+            return zip(prevs, items, nexts)
+
+
 def transactions(transactions, config_file):
 
-    extend = _load_config(config_file)['transaction']
+    extension_config = _load_config(config_file)['transaction']
 
-    for ext in extend:
+    for config in extension_config:
 
         ### Find all related transactions
         related = []
 
         # Go through each possible description of transaction
-        for d in ext['description']:
+        for d in config['description']:
             related.append([t
                 for t in transactions
                 if t.description == d[0] and
-                t.original_description == d[1]
+                   t.original_description == d[1]
             ])
 
         # Flatten above list and sort by date
         related = [transaction for subrelated in related for transaction in subrelated]
         related.sort(key=lambda x: x.date)
 
-        def _prev_and_nxt(some_iterable):
-            prevs, items, nexts = tee(some_iterable, 3)
-            prevs = chain([None], prevs)
-            nexts = chain(islice(nexts, 1, None), [None])
-            return zip(prevs, items, nexts)
+        # Go through optional configuration fields and do more filtering
+        related = _filter_related_transactions(related, config)
 
         def _get_interval():
-            rel = relativedelta(r_next.date - relativedelta(months=1), r.date)
+            rel = relativedelta(t_next.date - relativedelta(months=1), t.date)
             if rel.days > 24: # TODO Tune this.
                 return rel.months + 1
             else:
                 return rel.months
 
-        # Extend transaction to one month before the next related one
-        for r_prev, r, r_next in _prev_and_nxt(related):
+        ### Extend transactions
+        for t_prev, t, t_next in _prev_and_nxt(related):
 
-            ### Skip transactions that are outside of criterias
-            # TODO: these must be moved outside of this loop
-            #       otherwise they will be used in next transaction under certain circumstances.
-
-            if 'start_date' in ext:
-                if r.date < ext['start_date']:
-                    continue
-
-            if 'end_date' in ext:
-                if r.date > ext['end_date']:
-                    continue
-
-            if r_next:
+            if t_next:
                 # Calculate the difference in months between transactions
-                r.months_extend = _get_interval()
+                t.months_extend = _get_interval()
 
-            elif r_prev:
+            elif t_prev:
                 # Take previous extension and set to this transaction
-                r.months_extend = r_prev.months_extend
+                t.months_extend = t_prev.months_extend
 
             else:
-                # This transaction has only happened once, go with default
-                if 'default_months' in ext:
-                    r.months_extend = ext['default_months'] - 1
+                # This transaction has only happened once, go with configuration
+                if 'default_months' in config:
+                    t.months_extend = config['default_months'] - 1
                 else:
                     print(('WARNING: transaction with description "{}" has only happened once '
                            'hence default_months needs to be in configuration. Skipping extension.'
-                    ).format(r.description))
+                    ).format(t.description))
+                    break
 
-
-            r.add_note('Extended_pytink')
+            t.add_note('Extended_' + config['name'].replace(' ', '_'))

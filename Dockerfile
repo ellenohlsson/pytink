@@ -1,4 +1,4 @@
-# docker build -t tink_parser_app .
+# docker build -t pytink .
 
 FROM python:3.8.2-slim-buster
 

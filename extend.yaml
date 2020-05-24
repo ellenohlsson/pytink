@@ -1,50 +1,52 @@
 transaction:
 
-  - name: Bredband2
+  - name: Broadband
     description:
       - [Bredband2, BREDBAND2 AB]
-    end_date: 2020-09-01
+    end_date: 2020-09-01 # After this date I paid monthly
 
-  - name: IF Skadeförsäkring
+  - name: Home Insurance
     description:
       - [If Skadeförsäk, IF SKADEFÖRSÄK]
-    end_date: 2020-12-01
+    end_date: 2020-12-01 # After this date I paid monthly
 
-  - name: Bilsport & MC
+  - name: MC Insurance
     description:
       - ['Bilsport & Mc/', 'BILSPORT & MC/']
       - ['Moderna Försäk', 'MODERNA FÖRSÄK']
-    start_date: 2017-10-01
 
-  - name: Euro Accident
+  - name: Accident Insurance
     description:
       - ['Euro Accident', 'EURO ACCIDENT']
-    end_date: 2020-12-01
+    end_date: 2020-12-01 # After this date I paid monthly
 
-  - name: Sveriges Ingenjörer
+  - name: Union
     description:
       - ['Sveriges Ingen', 'SVERIGES INGEN']
-    end_date: 2020-12-01
+    end_date: 2020-12-01 # After this date I paid monthly
 
   - name: HSB Göteborg
     description:
       - ['1000 HSB Göteb', '1000 HSB Göteb']
-    end_date: 2019-02-01
+    end_date: 2019-02-01 # Ended my membership
 
-  - name: Kenneths MC-Service
+  - name: MC Service
     description:
       - ['Kenneths MC-Se', 'Kenneths MC-Se']
+    default_months: 3   # Months to split unique transaction
 
-  - name: Friskis & Svettis
+  - name: Gym
     description:
       - ['Friskis&svetti', 'FRISKIS&SVETTI']
-    min_amount: 500
+    min_amount: 1500 # Only membership fees
 
-  - name: Altro Hair
+  - name: Hairdresser
     description:
       - ['Altro Hair', 'ALTRO HAIR AB']
       - ['Altro', 'ALTRO']
-    min_amount: 600
+      - ['Sally Dawit', 'SALLY DAWIT']
+    min_amount: 480 # Skip products etc
+
 
   - name: TicketMaster
     description:
