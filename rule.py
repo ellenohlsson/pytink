@@ -167,3 +167,14 @@ def _action_extend_to_next(transactions, rule_name, default_months = None):
 
             if t.months_extend > 0:
                 t.add_note(rule_name.replace(' ', '_') + '__extend_to_next')
+
+
+def _action_extend_months(transactions, rule_name, months):
+
+    for t in transactions:
+
+        if t.months_extend is not None:
+            print('WARNING: transaction in rule {} previously extended, overriding.'.format(rule_name))
+
+        t.months_extend = months
+        t.add_note(rule_name.replace(' ', '_') + '__extend_months')
