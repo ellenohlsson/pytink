@@ -1,13 +1,13 @@
 # pytink
-Parser for Tink GDPR dump with some added features not available in Tink itself
+Parser for Tink GDPR dump with some added features not available in Tink itself.
 
-Project came about since Tink doesn't offer it's users the option of exporting
-their data in a reasonable format and do more in depth analysis of the spending.
+Project came about since Tink doesn't offer its users the option of exporting
+their data in a reasonable format to do more in depth analysis of their economies.
 
-This project is work in progress and can currently only:
+This project is work in progress and can currently:
 * parse the transaction and reimbursement part of the GDPR dump reliably.
-* tag uncategorized\* transactions in a custom GUI.
-* extend configured transactions to divide amount per month until next transaction.
+* tag uncategorized\* transactions in a custom UI.
+* apply rules to sets of transactions to extend their cost in time or label them as fixed cost.
 * filter transactions in some rudimentary way.
 * export CSV of either raw or treated transactions.
 
@@ -18,5 +18,5 @@ To do a Tink GDPR dump head over to [Tink](https://account.tink.se), sign in and
 Next, open run.py and tinker around. 
 Aim is to eventually use pytink as a module and move run.py out of it.
 
-Currently this project is more mature than my expense graph project [rexpense](https://github.com/ellenohlsson/rexpense),
+Currently this project is much more mature than my expense graph project [rexpense](https://github.com/ellenohlsson/rexpense),
 but if you feel like checking that out I've decided to also make that public.
