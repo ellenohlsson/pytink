@@ -7,6 +7,8 @@ import models
 import export
 import transaction
 
+# TODO add better error checks and printouts
+
 
 def get_section_id(re_id, section):
     m = re.findall(re_id, section)
@@ -41,7 +43,7 @@ def parse_datatype(key, value):
             return datetime.strptime(value, '%Y-%m-%dT%H:%M:%SZ').date()
         elif 'Amount' in key:
             return float(value)
-        elif 'Payload' in key:
+        elif 'Payload' in key: # Dictionaries
             return ast.literal_eval(value)
         else:
             return value

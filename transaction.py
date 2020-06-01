@@ -1,3 +1,6 @@
+# TOOO rename (to filter?) and extend
+
+
 def filter_exclude(transaction):
 
     if abs(transaction.balance) > 1.0:
