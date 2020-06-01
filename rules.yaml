@@ -1,0 +1,113 @@
+settings:
+  match_warning: 10 # [%] If filter returns greater than this percentage of the non-filtered transactions.
+
+
+transactions:
+
+  ### Example entry:
+  #
+  # - rule: Some Name # Mandatory.
+  #   filter:
+  #     description: # Optional. Some companies change their transaction descriptions, list all.
+  #       - [transaction_description, original_transaction_description]
+  #       - [transaction_description2, original_transaction_description2]
+  #     category:    # Optional
+  #       - Hobby
+  #       - Restaurang
+  #     start_date: 2020-01-01 # Optional
+  #     end_date: 2020-12-31   # Optional
+  #     min_amount: -500       # Optional. Costs are negative.
+  #     max_amount: -10000     # Optional
+  #   action:                  # At least one mandatory. Action will add notes to all altered transactions.
+  #     - extend_to_next: X    # Extend each transaction to next found, X months if only 1 transaction exist.
+  #     - extend_months: X     # TODO Implement. Extend each transaction X months.
+  #     - fixed_cost           # TODO Implement. Label as fixed cost.
+
+
+  - rule: Broadband
+    filter:
+      description:
+        - [Bredband2, BREDBAND2 AB]
+      category:
+        - media, tele & it
+      end_date: 2020-09-01 # After date I paid monthly
+    action:
+      - extend_to_next: 3  # 3 months if only 1 transaction exist
+      - fixed_cost
+
+  - rule: Home Insurance
+    filter:
+      description:
+        - [If Skadeförsäk, IF SKADEFÖRSÄK]
+      end_date: 2020-12-01 # After date I paid monthly
+    action:
+      - extend_to_next: 3
+      - fixed_cost
+
+  - rule: MC Insurance
+    filter:
+      description:
+        - ['Bilsport & Mc/', 'BILSPORT & MC/']
+        - ['Moderna Försäk', 'MODERNA FÖRSÄK']
+    action:
+      - extend_to_next: 3
+
+  - rule: Accident & Death Insurance
+    filter:
+      description:
+        - ['Euro Accident', 'EURO ACCIDENT']
+      end_date: 2020-12-01 # After date I paid monthly
+    action:
+      - extend_to_next: 3
+      - fixed_cost
+
+  - rule: Union
+    filter:
+      description:
+        - ['Sveriges Ingen', 'SVERIGES INGEN']
+      end_date: 2020-12-01 # After date I paid monthly
+    action:
+      - extend_to_next: 3
+      - fixed_cost
+
+  - rule: HSB Göteborg
+    filter:
+      description:
+        - ['1000 HSB Göteb', '1000 HSB Göteb']
+    end_date: 2019-02-01 # Ended my membership
+    action:
+      - extend_to_next: 3
+      - fixed_cost
+
+  - rule: MC Service
+    filter:
+      description:
+        - ['Kenneths MC-Se', 'Kenneths MC-Se']
+    action:
+      - extend_to_next: 3
+
+  - rule: Gym
+    filter:
+      description:
+        - ['Friskis&svetti', 'FRISKIS&SVETTI']
+      min_amount: -1500 # Only membership fees
+    action:
+      - extend_to_next: 3
+
+  - rule: Hairdresser
+    filter:
+      description:
+        - ['Altro Hair', 'ALTRO HAIR AB']
+        - ['Altro', 'ALTRO']
+        - ['Sally Dawit', 'SALLY DAWIT']
+    min_amount: -480 # Skip products etc
+    action:
+      - extend_to_next: 3
+
+  - rule: 12 Month Extend
+    filter:
+      category:
+        - Hemelektronik
+        - Kläder & Accessoarer
+    action:
+      - extend_months: 12

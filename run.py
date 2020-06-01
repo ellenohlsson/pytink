@@ -3,7 +3,7 @@ import os
 
 import parse
 import export
-import extend
+import rule
 import tag
 import transaction
 
@@ -32,8 +32,8 @@ if __name__ == '__main__':
         filename = 'tags_{}.csv'.format(export.date())
         tag.export(uncategorized, filename)
 
-    # Extend transactions
-    extend.transactions(transactions, 'extend.yaml')
+    # Apply rules
+    rule.apply(transactions, 'rules.yaml')
     transactions.sort(key=lambda x: x.date)
 
     # Export final transactions
