@@ -178,3 +178,11 @@ def _action_extend_months(transactions, rule_name, months):
 
         t.months_extend = months
         t.add_note(rule_name.replace(' ', '_') + '__extend_months')
+
+
+def _action_fixed_cost(transactions, rule_name, _ = None):
+    note = rule_name.replace(' ', '_') + '__fixed_cost'
+
+    for t in transactions:
+        if note not in t.note:
+            t.add_note(note)
