@@ -91,10 +91,10 @@ def _filter_related_transactions(related, filter):
 
 
 def _prev_and_nxt(some_iterable):
-            prevs, items, nexts = tee(some_iterable, 3)
-            prevs = chain([None], prevs)
-            nexts = chain(islice(nexts, 1, None), [None])
-            return zip(prevs, items, nexts)
+    prevs, items, nexts = tee(some_iterable, 3)
+    prevs = chain([None], prevs)
+    nexts = chain(islice(nexts, 1, None), [None])
+    return zip(prevs, items, nexts)
 
 
 def _filter(transactions, rule, settings):
@@ -135,44 +135,43 @@ def _filter(transactions, rule, settings):
 
 def _action_extend_to_next(transactions, rule_name, default_months = None):
 
-        def _get_interval():
-            rel = relativedelta(t_next.date - relativedelta(months=1), t.date)
-            if rel.days > 24: # TODO Tune this.
-                return rel.months + 1
+    def _get_interval():
+        rel = relativedelta(t_next.date - relativedelta(months=1), t.date)
+        if rel.days > 24: # TODO Tune this.
+            return rel.months + 1
+        else:
+            return rel.months
+
+    for t_prev, t, t_next in _prev_and_nxt(transactions):
+
+        if t.months_extend is not None:
+            print('WARNING: transaction in rule {} previously extended, overriding.'.format(rule_name))
+
+        if t_next:
+            # Calculate the difference in months between transactions
+            t.months_extend = _get_interval()
+
+        elif t_prev:
+            # Take previous extension and set to this transaction
+            t.months_extend = t_prev.months_extend
+
+        else:
+            # This transaction has only happened once, go with configuration
+            if default_months:
+                t.months_extend = default_months - 1
             else:
-                return rel.months
+                print(('WARNING: action "extend_to_next" in rule "{}" found only one transaction. '
+                        'Hence a default number of months needs to be in configuration. Skipping.'
+                ).format(rule_name))
+                break
 
-        for t_prev, t, t_next in _prev_and_nxt(transactions):
-
-            if t.months_extend is not None:
-                print('WARNING: transaction in rule {} previously extended, overriding.'.format(rule_name))
-
-            if t_next:
-                # Calculate the difference in months between transactions
-                t.months_extend = _get_interval()
-
-            elif t_prev:
-                # Take previous extension and set to this transaction
-                t.months_extend = t_prev.months_extend
-
-            else:
-                # This transaction has only happened once, go with configuration
-                if default_months:
-                    t.months_extend = default_months - 1
-                else:
-                    print(('WARNING: action "extend_to_next" in rule "{}" found only one transaction. '
-                           'Hence a default number of months needs to be in configuration. Skipping.'
-                    ).format(rule_name))
-                    break
-
-            if t.months_extend > 0:
-                t.add_note(rule_name.replace(' ', '_') + '__extend_to_next')
+        if t.months_extend > 0:
+            t.add_note(rule_name.replace(' ', '_') + '__extend_to_next')
 
 
 def _action_extend_months(transactions, rule_name, months):
 
     for t in transactions:
-
         if t.months_extend is not None:
             print('WARNING: transaction in rule {} previously extended, overriding.'.format(rule_name))
 
