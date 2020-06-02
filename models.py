@@ -83,10 +83,11 @@ class Transaction():
 
     def parse_note(self, note):
         n = re.findall(r'#(\w+)', note if note else '')
-        return ';'.join(n) if n else None
+        return n
 
     def add_note(self, note):
-        self.note = self.note + ';' + note if self.note else note
+        if note not in self.note:
+            self.note.append(note)
 
     def serialize(self):
         if not self.months_extend:
@@ -97,7 +98,8 @@ class Transaction():
                           self.balance,
                           export.nonetype_to_str(self.category),
                           export.nonetype_to_str(self.fixed_cost),
-                          export.nonetype_to_str(self.note)]])
+                          '[{}]'.format(','.join(self.note))
+                        ]])
         else:
 
             # Extend the transaction (split the cost on more months than transaction date)
@@ -116,7 +118,8 @@ class Transaction():
                           round(self.balance / (self.months_extend + 1)),
                           export.nonetype_to_str(self.category),
                           export.nonetype_to_str(self.fixed_cost),
-                          export.nonetype_to_str(self.note)])
+                          '[{}]'.format(','.join(self.note))
+                         ])
 
             return iter(r)
 

@@ -183,6 +183,8 @@ def _action_fixed_cost(transactions, rule_name, _ = None):
     note = rule_name.replace(' ', '_') + '__fixed_cost'
 
     for t in transactions:
-        if not t.fixed_cost:
-            t.fixed_cost = True
-            t.add_note(note)
+        if t.fixed_cost:
+            print('WARNING: transaction in rule {} previously set as fixed_cost.'.format(rule_name))
+
+        t.fixed_cost = True
+        t.add_note(note)
