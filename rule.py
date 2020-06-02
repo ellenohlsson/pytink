@@ -82,8 +82,8 @@ def _filter_related_transactions(related, filter):
                     related.remove(t)
                     continue
 
-        if 'category' in filter and t.modified_category:
-            if t.modified_category.lower() not in categories:
+        if 'category' in filter and t.category:
+            if t.category.lower() not in categories:
                 related.remove(t)
                 continue
 
@@ -116,7 +116,7 @@ def _filter(transactions, rule, settings):
         for c in filter['category']:
             related.append([t
                 for t in transactions
-                if t.modified_category == c
+                if t.category == c
             ])
 
     # Flatten above list and sort by date
@@ -183,5 +183,6 @@ def _action_fixed_cost(transactions, rule_name, _ = None):
     note = rule_name.replace(' ', '_') + '__fixed_cost'
 
     for t in transactions:
-        if note not in t.note:
+        if not t.fixed_cost:
+            t.fixed_cost = True
             t.add_note(note)

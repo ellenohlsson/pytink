@@ -57,22 +57,23 @@ class Transaction():
     def _map_fields(self):
         f = self.all_fields
 
-        self.date = f['Date']
+        self.date        = f['Date']
         self.description = f['Description']
         self.original_description = f['Original Description']
-        self.amount = f['Amount']
-        self.balance = self.amount - self.sum_reimbursements()
-        self.type = f['Type']
-        self.note = self.parse_note(f['Note'])
+        self.amount  = f['Amount']
+        self.balance = f['Amount'] - self.sum_reimbursements()
+        self.type    = f['Type']
+        self.note    = self.parse_note(f['Note'])
 
-        # Optional field
+        # Optional field in GDPR dump
         try:
-            self.modified_category = f['Modified category']
+            self.category = f['Modified category']
         except:
-            self.modified_category = None
+            self.category = None
 
-        # For extend functionality (optionally added later)
+        # pytink added functionality
         self.months_extend = None
+        self.fixed_cost    = False
 
     def sum_reimbursements(self):
         sum = 0
@@ -94,7 +95,8 @@ class Transaction():
                           self.description,
                           self.original_description,
                           self.balance,
-                          export.nonetype_to_str(self.modified_category),
+                          export.nonetype_to_str(self.category),
+                          export.nonetype_to_str(self.fixed_cost),
                           export.nonetype_to_str(self.note)]])
         else:
 
@@ -112,7 +114,8 @@ class Transaction():
                           self.description,
                           self.original_description,
                           round(self.balance / (self.months_extend + 1)),
-                          export.nonetype_to_str(self.modified_category),
+                          export.nonetype_to_str(self.category),
+                          export.nonetype_to_str(self.fixed_cost),
                           export.nonetype_to_str(self.note)])
 
             return iter(r)
@@ -123,5 +126,6 @@ class Transaction():
                 'Description',
                 'Original_Description',
                 'Balance',
-                'Modified_Category',
-                'Note']
+                'Category',
+                'Fixed_Cost',
+                'Notes']

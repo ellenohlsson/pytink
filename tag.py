@@ -61,7 +61,7 @@ def apply(tags, transactions):
             # Find all related transactions
             related = [tr
                 for tr in transactions
-                if tr.modified_category == None and
+                if tr.category == None and
                 tr.description == t['description'] and
                 tr.original_description == t['original_description']
             ]
@@ -69,7 +69,7 @@ def apply(tags, transactions):
             # Assign category
             if len(related) > 0:
                 for r in related:
-                    r.modified_category = t['category']
+                    r.category = t['category']
             else:
                 # This probably means that an older tags file have the same
                 # tag as a never tags file.

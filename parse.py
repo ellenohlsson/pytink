@@ -31,7 +31,7 @@ def split_sections(delimiter, data):
         if key not in d:
             d[key] = section
         else:
-            print('ERROR: Section already exist3')
+            print('ERROR: Section already exist')
             break
 
     return d
@@ -66,7 +66,7 @@ def parse_fields(section):
         if key not in d:
             d[key] = parse_datatype(key, value.strip())
         else:
-            print('ERROR: Key already exist2')
+            print('ERROR: Key already exist')
             break
 
     return d
