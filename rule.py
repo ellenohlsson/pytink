@@ -45,49 +45,48 @@ def apply(transactions, config_file):
             print('WARNING: rule "{}" filter returned no transactions.'.format(rule['rule']))
 
 
-def _filter_related_transactions(related, filter):
-
+def _filter_related_transactions(input, filter):
     if 'category' in filter:
         categories = [c.lower() for c in filter['category']]
 
-    for t in related:
+    output = []
+    for t in input:
 
         if 'start_date' in filter:
             if t.date < filter['start_date']:
-                related.remove(t)
                 continue
 
         if 'end_date' in filter:
             if t.date > filter['end_date']:
-                related.remove(t)
                 continue
 
         if 'min_amount' in filter:
             if filter['min_amount'] < 0:
                 if t.balance > filter['min_amount']:
-                    related.remove(t)
                     continue
             else:
                 if t.balance < filter['min_amount']:
-                    related.remove(t)
                     continue
 
         if 'max_amount' in filter:
             if filter['max_amount'] < 0:
                 if t.balance < filter['max_amount']:
-                    related.remove(t)
                     continue
             else:
                 if t.balance > filter['max_amount']:
-                    related.remove(t)
                     continue
 
-        if 'category' in filter and t.category:
-            if t.category.lower() not in categories:
-                related.remove(t)
+        if 'category' in filter:
+            if t.category:
+                if t.category.lower() not in categories:
+                    continue
+            else:
                 continue
 
-    return related
+        # All filter criterias passed, add to output.
+        output.append(t)
+
+    return output
 
 
 def _prev_and_nxt(some_iterable):
