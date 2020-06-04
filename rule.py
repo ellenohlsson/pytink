@@ -46,8 +46,21 @@ def apply(transactions, config_file):
 
 
 def _filter_related_transactions(input, filter):
-    if 'category' in filter:
-        categories = [c.lower() for c in filter['category']]
+
+    def _categories():
+        return [c.lower() for c in filter['category']]
+
+    def _find_note():
+        t_note      = [tr.lower() for tr in t.note]
+        filter_note = [tr.lower() for tr in filter['note']]
+
+        found = False
+        for n in t_note:
+            if n in filter_note:
+                found = True
+                break
+
+        return found
 
     output = []
     for t in input:
@@ -78,7 +91,14 @@ def _filter_related_transactions(input, filter):
 
         if 'category' in filter:
             if t.category:
-                if t.category.lower() not in categories:
+                if t.category.lower() not in _categories():
+                    continue
+            else:
+                continue
+
+        if 'note' in filter:
+            if t.note:
+                if not _find_note():
                     continue
             else:
                 continue
@@ -117,6 +137,9 @@ def _filter(transactions, rule, settings):
                 for t in transactions
                 if t.category == c
             ])
+
+    else:
+        related = [transactions.copy()]
 
     # Flatten above list and sort by date
     related = [transaction for subrelated in related for transaction in subrelated]

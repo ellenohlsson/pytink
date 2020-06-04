@@ -7,18 +7,21 @@ transactions:
   ### Example entry:
   #
   # - rule: Some Name # Mandatory.
-  #   filter:        # At least one mandatory below
-  #     description: # Optional. Some companies change their transaction descriptions, list all.
+  #   filter:        # At least one mandatory.
+  #     description: # Optional. Case-sensitive. Some companies change their transaction descriptions, list all.
   #       - [transaction_description, original_transaction_description]
   #       - [transaction_description2, original_transaction_description2]
-  #     category:    # Optional
+  #     category:    # Optional. Case-insensitive
   #       - Hobby
-  #       - Restaurang
+  #       - restaurang
+  #     note:        # Optional. Case-insensitive
+  #       - MC
+  #       - lindyhop
   #     start_date: 2020-01-01 # Optional
   #     end_date: 2020-12-31   # Optional
   #     min_amount: -500       # Optional. Costs are negative.
   #     max_amount: -10000     # Optional
-  #   action:                  # At least one mandatory. Action will add notes to all altered transactions.
+  #   action:                  # At least one mandatory. Action adds notes to all altered transactions.
   #     - extend_to_next: X    # Extend each transaction to next found, X months if only 1 transaction exist.
   #     - extend_months: X     # Extend each transaction X months.
   #     - fixed_cost           # Label as fixed cost.
