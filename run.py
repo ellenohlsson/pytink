@@ -11,7 +11,7 @@ import transaction
 if __name__ == '__main__':
 
     # Load GDPR dump and parse transactions from it
-    transactions = parse.transactions('tink-export-2020-04-19.txt')
+    transactions = parse.transactions('tink-export-2020-06-06.txt')
     transactions.sort(key=lambda x: x.date)
     export.transactions(transactions, 'raw_transactions_{}.csv'.format(export.date()))
 

@@ -210,3 +210,9 @@ def _action_fixed_cost(transactions, rule_name, _ = None):
 
         t.fixed_cost = True
         t.add_note(note)
+
+def _action_note(transactions, rule_name, optional_note = None):
+    note = optional_note if optional_note else rule_name
+
+    for t in transactions:
+        t.add_note(note)

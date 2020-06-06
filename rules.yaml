@@ -6,7 +6,7 @@ transactions:
 
   ### Example entry:
   #
-  # - rule: Some Name # Mandatory.
+  # - rule: Some Name # Mandatory. Does not need to be unique.
   #   filter:        # At least one mandatory.
   #     description: # Optional. Case-sensitive. Some companies change their transaction descriptions, list all.
   #       - [transaction_description, original_transaction_description]
@@ -38,27 +38,22 @@ transactions:
       - extend_to_next: 3  # 3 months if only 1 transaction exist
       - fixed_cost
 
-  - rule: Home Insurance
+  - rule: Phone
+    filter:
+      description:
+        - [Telia Mobil/mo, TELIA MOBIL/MO]
+        - [Vimla, Vimla]
+        - [Klarna, Klarna]
+      category:
+        - Media, Tele & IT
+    action:
+      - fixed_cost
+
+  - rule: Insurance
     filter:
       description:
         - [If Skadeförsäk, IF SKADEFÖRSÄK]
-      end_date: 2020-12-01 # After date I paid monthly
-    action:
-      - extend_to_next: 3
-      - fixed_cost
-
-  - rule: MC Insurance
-    filter:
-      description:
-        - ['Bilsport & Mc/', 'BILSPORT & MC/']
-        - ['Moderna Försäk', 'MODERNA FÖRSÄK']
-    action:
-      - extend_to_next: 3
-
-  - rule: Accident & Death Insurance
-    filter:
-      description:
-        - ['Euro Accident', 'EURO ACCIDENT']
+        - [Euro Accident, EURO ACCIDENT]
       end_date: 2020-12-01 # After date I paid monthly
     action:
       - extend_to_next: 3
@@ -67,7 +62,7 @@ transactions:
   - rule: Union
     filter:
       description:
-        - ['Sveriges Ingen', 'SVERIGES INGEN']
+        - [Sveriges Ingen, SVERIGES INGEN]
       end_date: 2020-12-01 # After date I paid monthly
     action:
       - extend_to_next: 3
@@ -76,23 +71,47 @@ transactions:
   - rule: HSB Göteborg
     filter:
       description:
-        - ['1000 HSB Göteb', '1000 HSB Göteb']
+        - [1000 HSB Göteb, 1000 HSB Göteb]
     end_date: 2019-02-01 # Ended my membership
     action:
       - extend_to_next: 3
       - fixed_cost
 
+  - rule: Boplats Syd
+    filter:
+      description:
+        - [Boplats Syd, Boplats Syd]         # Need regex feature for this
+        - [Boplats Syd Malmo, Boplats Syd]
+    action:
+      - extend_to_next: 12
+
+  - rule: Boplats Göteborg
+    filter:
+      description:
+        - [Boplats Götebo, Boplats Götebo]   # Need regex feature for this
+        - [Boplats Götebo, BOPLATS GÖTEBO]
+    action:
+      - extend_to_next: 12
+
+  - rule: MC Insurance
+    filter:
+      description:
+        - [Bilsport & Mc/, BILSPORT & MC/]
+        - [Moderna Försäk, MODERNA FÖRSÄK]
+    action:
+      - extend_to_next: 3
+
   - rule: MC Service
     filter:
       description:
-        - ['Kenneths MC-Se', 'Kenneths MC-Se']
+        - [Kenneths MC-Se, Kenneths MC-Se]
     action:
       - extend_to_next: 3
 
   - rule: Gym
     filter:
       description:
-        - ['Friskis&svetti', 'FRISKIS&SVETTI']
+        - [Friskis&svetti, FRISKIS&SVETTI]
       min_amount: -1500 # Only membership fees
     action:
       - extend_to_next: 3
@@ -100,17 +119,51 @@ transactions:
   - rule: Hairdresser
     filter:
       description:
-        - ['Altro Hair', 'ALTRO HAIR AB']
-        - ['Altro', 'ALTRO']
-        - ['Sally Dawit', 'SALLY DAWIT']
+        - [Altro Hair, ALTRO HAIR AB]
+        - [Altro, ALTRO]
+        - [Sally Dawit, SALLY DAWIT]
     min_amount: -480 # Skip products etc
     action:
       - extend_to_next: 3
+
+  - rule: Fixed Cost
+    filter:
+      description:
+        - [Sydsvenska Dag, SYDSVENSKA DAG]
+        - [Spotify P0FD74, Spotify P0FD74]   # Need regex feature for this
+        - [Apple.com/bill, APPLE.COM/BILL]
+        - [Dropbox 6Z92YT, Dropbox 6Z92YT]   # Need regex feature for this
+        - [Dropbox*nv82qc, DROPBOX*NV82QC]
+    action:
+      - fixed_cost
 
   - rule: 12 Month Extend
     filter:
       category:
         - Hemelektronik
         - Kläder & Accessoarer
+        - Optik
     action:
       - extend_months: 12
+
+
+  ### Purely for group creation used for plotting
+  - rule: Accommodation
+    filter:
+      description:
+        - [Bostads Poseidon, BOSTADS AB POS] # Need regex feature for this
+        - [Bostads Ab Pos, BOSTADS AB POS]
+        - [Bostads Pos, BOSTADS AB POS]
+        - [Bostads Ab Poseidon, BOSTADS AB POS]
+        - [Göteborg Energ, GÖTEBORG ENERG]   # Need regex feature for this
+        - [Göteborg Energ, Göteborg Energ]
+        - [Bredband2, BREDBAND2 AB]
+        - [If Skadeförsäk, IF SKADEFÖRSÄK]
+        - [Hyresgästför, HYRESGÄSTFÖR]
+        - [Boplats Syd, Boplats Syd]         # Need regex feature for this
+        - [Boplats Syd Malmo, Boplats Syd]
+        - [Boplats Götebo, Boplats Götebo]   # Need regex feature for this
+        - [Boplats Götebo, BOPLATS GÖTEBO]
+        - [1000 HSB Göteb, 1000 HSB Göteb]
+    action:
+      - note: Accommodation                  # Optional argument, otherwise rule name is used.
