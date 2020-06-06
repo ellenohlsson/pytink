@@ -25,6 +25,7 @@ transactions:
   #     - extend_to_next: X    # Extend each transaction to next found, X months if only 1 transaction exist.
   #     - extend_months: X     # Extend each transaction X months.
   #     - fixed_cost           # Label as fixed cost.
+  #     - note: Text           # Adds note to transaction, Text is optional, if not given rule name is used.
 
 
   - rule: Broadband
@@ -166,4 +167,4 @@ transactions:
         - [Boplats Götebo, BOPLATS GÖTEBO]
         - [1000 HSB Göteb, 1000 HSB Göteb]
     action:
-      - note: Accommodation                  # Optional argument, otherwise rule name is used.
+      - note
